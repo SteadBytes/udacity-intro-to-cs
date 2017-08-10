@@ -46,7 +46,7 @@ Return True
 
 ### Psuedocode
 ```
-For i -> len(list):
+for i -> len(list):
 	for j -> len(list[i]):
         row_item = list[i][j]
         col_item = list [j][i]
