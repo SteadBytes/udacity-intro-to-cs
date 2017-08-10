@@ -1,6 +1,6 @@
 # Symmetric Square
-A list  is symmetric if the first row is the same as the first column, the second row is the same as the second column etc…
-Write a function to determine whether a list is symmetric.
+A matrix  is symmetric if the first row is the same as the first column, the second row is the same as the second column etc…
+Write a function to determine whether a matrix is symmetric.
 
 ## Example input and output:
 ```
