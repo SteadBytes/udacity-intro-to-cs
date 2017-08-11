@@ -16,3 +16,11 @@ For the text "test" the frequency of 'e' is 1, 's' is 1 and 't' is 2.
 ## Human Method
 Go through input letter by letter. Keep count/tally of occurences of each letter.
 Normalize frequency of each after.
+
+## Refined
+* letter_count array array length 26 to represent each letter a-z.
+* Get (ASCII value **-97**) for each char in input to get position in letter_count array
+    * Lowercase ASCII starts at 97
+* Increment value at position in letter_count
+* Divide each element in letter_count by len(input), return.
+    * List comprehension
