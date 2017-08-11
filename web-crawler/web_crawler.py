@@ -44,12 +44,39 @@ def get_all_links(page):
     return links
 
 
+def add_to_index(index, keyword, url):
+    if len(index) != 0:
+        for i in range(len(index)):
+            if index[i][0] == keyword:
+                index[i][1].append(url)
+                return
+
+    index.append([keyword, [url]])
+    return
+
+
+def lookup(index, keyword):
+    for i in range(len(index)):
+        if index[i][0] == keyword:
+            return index[i][1]
+    return []
+
+
+def add_page_to_index(index, url, content):
+    keywords = content.split()
+    for word in keywords:
+        add_to_index(index, word, url)
+
+
 def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
+    index = []
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
-            links = get_all_links(get_page(page))
+            content = get_page(page)
+            add_page_to_index(index, page, content)
+            links = get_all_links(content)
             union(crawled, links)
-    return crawled
+    return index
