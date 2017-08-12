@@ -14,9 +14,15 @@ This is a network as the nodes are **not directly conected** but each can **stil
 
 ## Making a Network
 * Encoding and interpreting messages
+    * Internet (high-level): message-> bits -> electrons/photons 'along wire'.
 * Routing messages
-* Rules for deciding who gets to use resources
-    * i.e. priority for certain people
+    * Internet: Routers 'figure out' next hop.
+* Rules for deciding who gets to use resources.
+    * i.e. priority for certain people.
+    * Internet: Best effort service.
+        * No real rules overall.
+        * Each router along the network decides on its own which rules to apply.
+        * No guarantee a package will reach it's destination - package drops.
 
 ## Measuring a Network
 ### Latency
@@ -29,3 +35,4 @@ This is a network as the nodes are **not directly conected** but each can **stil
 
 ## Tracing
 * `tracert` on windows will trace all the network 'hops' to an endpoint.
+![](../images/2017-08-11-15-35-37.png)
