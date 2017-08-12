@@ -20,8 +20,9 @@ def add_to_index(index, keyword, url):
     if len(index) != 0:
         for i in range(len(index)):
             if index[i][0] == keyword:
-                index[i][1].append(url)
-                return
+                if url not in index[i][1]:
+                    index[i][1].append(url)
+                    return
 
     index.append([keyword, [url]])
     return
