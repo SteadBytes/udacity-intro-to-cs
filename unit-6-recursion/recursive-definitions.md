@@ -37,8 +37,8 @@ def factorial(n):
 ### Iterative Factorial
 ```python
 def factorial_iterative(n):
-    product = 1;
+    product = 1
     for (i in range(0,n+1))
-        product *= i;
-    return product;
+        product *= i
+    return product
 ```
