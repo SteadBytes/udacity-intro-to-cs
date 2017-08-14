@@ -30,3 +30,15 @@ def factorial(n):
 
 
 ```
+
+## Recursion vs Iteration
+**Anything** that can be defined recursively can also be defined iteratively. Recursion can be very expensive computationally. Some languages are better than other for recursion - Python is not very good.
+
+### Iterative Factorial
+```python
+def factorial_iterative(n):
+    product = 1;
+    for (i in range(0,n+1))
+        product *= i;
+    return product;
+```
