@@ -7,6 +7,8 @@ Two parts:
 2. Recursive Case
     * Defined in terms of "smaller" version of itself.
 
+**Without** a base case, it is a **circular definition**.
+
 ## Defining Procedures Recursively
 ### Factorial Definition
 `factorial(n) = n * (n-1) * (n-2)* ... *1`
