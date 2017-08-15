@@ -1,7 +1,7 @@
 # Fibonacci Sequence
 Integer sequence where every number after the first 2 is the sum of the two preceding ones. 
 
-First two numbers are eithe 1,1 or 0,1.
+First two numbers are either 1,1 or 0,1.
 
 Defined by:
 
@@ -39,3 +39,24 @@ The above method requires a lot of duplicate, redundant computation. The number 
 * `fibonacci(34)` -> 2 times.
 * `fibonacci(35)` -> 1 time.
 * `fibonacci(36)` -> 1 time
+
+## Iterative Definition
+* While loop
+* Track previous two numbers
+```python
+def fibonacci(n):
+    if n == 0 or n == 1:
+        return n
+
+    result = 0
+    prev2 = 0
+    prev1 = 1
+    i = 2
+    
+    while i <= n:
+        result = prev2 + prev1
+        prev2 = prev1
+        prev1 = result
+        i += 1
+    return result
+```
