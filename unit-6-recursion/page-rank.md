@@ -8,7 +8,7 @@ Ranking is defined recursively over time (relaxation method, similar to friendsh
 * At `t=0`, rank of a url = 1
 * At time **t**, the rank of a url is the **sum of the ranks for all pages linkning to that url**.
 
-![](images/2017-08-15-08-57-35.png)
+![](../images/2017-08-15-08-57-35.png)
 
 **Inlinks** = Pages *linking in* to a particular url.
 
@@ -18,7 +18,7 @@ Ranking is also **weighted**, such that the rank contributed by a page is **inve
 * Divide each rank in the sum by the number of outlinks from that page.
 * i.e. the more links a page has, the less value each link contributes.
 
-![](images/2017-08-15-09-00-43.png)
+![](../images/2017-08-15-09-00-43.png)
 
 ## Damping Factor
 A web surfer who is randomly clicking links will eventually stop clicking. 
@@ -26,3 +26,10 @@ A web surfer who is randomly clicking links will eventually stop clicking.
 Damping factor/constant, *d* = the probability that, *at any step*, the surfer will **continue** clicking links.
 * It is generally assumed that d=0.85
 * How frequently the random web surfer will pick a random link vs starting over again on a new random page.
+
+### Usage
+The initial value is divided by the total number of pages, *N*, such that the sum of all ranks = 1. This keeps the ranks in a reasonable range.
+
+The value representing the times when a page is not followed is represented by *1-d/N*.
+
+![](../images/2017-08-15-11-21-11.png)

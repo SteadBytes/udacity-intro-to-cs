@@ -1,7 +1,3 @@
-# Update web crawler from unit-4 to use hashtables (python Dictionaries) instead
-# of list based index
-
-
 def get_page(url):
     # This is a simulated get_page procedure so that you can test your
     # code on two pages "http://xkcd.com/353" and "http://xkcd.com/554".
@@ -68,12 +64,37 @@ def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
     index = {}
+    # Holds list of outlinks for each URL
+    graph = {}
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
             content = get_page(page)
             add_page_to_index(index, page, content)
-            links = get_all_links(content)
-            union(tocrawl, links)
+            outlinks = get_all_links(content)
+            graph[page] = outlinks
+            union(tocrawl, outlinks)
             crawled.append(page)
-    return index
+    return index, graph
+
+
+def compute_ranks(graph):
+    d = 0.8  # damping factor
+    numloops = 10  # number of times through relaxation
+
+    ranks = {}
+    # Initialize ranks
+    npages = len(graph)
+    for page in graph:
+        ranks[page] = 1.0 / npages
+
+    for i in range(0, numloops):
+        newranks = {}
+        for page in graph:
+            rank = (1 - d) / npages
+            for node in graph:
+                if page in graph[node]:
+                    rank += d * ranks[node] / len(graph[node])
+            newranks[page] = rank
+        ranks = newranks
+    return ranks
