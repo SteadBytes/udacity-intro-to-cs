@@ -98,3 +98,25 @@ def compute_ranks(graph):
             newranks[page] = rank
         ranks = newranks
     return ranks
+
+
+def lucky_search(index, ranks, keyword):
+    """Returns the URL most likely to be the best site for a given keyword. 
+    If the keyword does not appear in the index, returns none.
+
+    Args:
+        index (dict): Index of keywords->urls from crawl_web()
+        ranks (dict): Url rankings produced by compute_ranks()
+        keyword (string): Keyword to search for.
+    Returns:
+        String, URL of highest ranking site for keyword.abs
+        None, if keyword is not present in index.
+    """
+    urls = lookup(index, keyword)
+    if not urls:
+        return None
+    top_rank = urls[0]
+    for url in urls:
+        if ranks[url] > ranks[top_rank]:
+            top_rank = url
+    return top_rank

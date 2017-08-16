@@ -32,4 +32,4 @@ add_to_index(index, 'udacity', 'http://npr.org')
 ```
 Since **udacity** is already in the index, the url `'http://nmr.org'` is appended to the existing url list for the keyword udacity.
 
-![](images/2017-08-11-13-46-48.png)
+![](../images/2017-08-11-13-46-48.png)
