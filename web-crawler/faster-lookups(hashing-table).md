@@ -10,7 +10,7 @@ Given a keyword, hash function will map a keyword to a number, which is the posi
 Using a hash funciton based on one part (i.e. first letter) of the input keyword. The hash will produce and index which corresponds to all items with that same part (i.e. first letter). 
 
 ![](../images/2017-08-12-16-04-50.png)
-c
+
 This is **Not the best way**. Time for searching is reduced but *not* significantly. Each bucket will still need to be searched item by item. Also, some buckets may have more items in than others making for unpredictable lookup time. For example, using the first letter of the keyword, the lookup time *could* be redced by a factor of 26 at best. However, buckets corresponding to word beginning with 'S' or 'T' are likely to contain more items than those for 'X' OR 'Q'. 
 
 ## Hash Table
