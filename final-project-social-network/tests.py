@@ -61,6 +61,11 @@ Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
         self.assertEqual(games, ['The Movie: The Game',
                                  'The Legend of Corgi', 'Dinosaur Diner'])
 
+    def test_extract_data_no_start_str(self):
+        sentence = ('John likes to The Movie: The Game,'
+                    'The Legend of Corgi, Dinosaur Diner')
+        self.assertIsNone(gsn.extract_data(sentence, 'play'))
+
 
 if __name__ == '__main__':
     unittest.main()

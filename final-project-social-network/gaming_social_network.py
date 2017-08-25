@@ -54,6 +54,8 @@ def extract_data(sentence, start_str):
         - start_str (str): Substring to identify the beginning of the desired data.
     """
     pos = sentence.find(start_str)
+    if pos == -1:
+        return None
     items = sentence[pos + (len(start_str) + 1):].split(',')
     return list(map(lambda x: x.lstrip(), items))
 
