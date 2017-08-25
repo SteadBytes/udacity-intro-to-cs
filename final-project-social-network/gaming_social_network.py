@@ -81,10 +81,6 @@ def create_data_structure(string_input):
             network[name]['games'] += games
     return network
 
-
-# network = create_data_structure(example_input)
-# print(network['Freda'])
-
 # ----------------------------------------------------------------------------- #
 # Note that the first argument to all procedures below is 'network' This is the #
 # data structure that you created with your create_data_structure procedure,    #
@@ -104,7 +100,11 @@ def get_connections(network, user):
         - If the user has no connections, return an empty list.
         - If the user is not in network, return None.
     """
-    return []
+    if not user in network:
+        return None
+    if not 'connections' in network[user]:
+        return []
+    return network[user]['connections']
 
 
 def get_games_liked(network, user):
@@ -118,7 +118,11 @@ def get_games_liked(network, user):
         - If the user likes no games, return an empty list.
         - If the user is not in network, return None.
     """
-    return []
+    if not user in network:
+        return None
+    if not 'games' in network[user]:
+        return []
+    return network[user]['games']
 
 
 def add_connection(network, user_A, user_B):
