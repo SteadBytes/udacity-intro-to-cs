@@ -3,8 +3,6 @@
 # Gaming Social Network       #
 # --------------------------- #
 #
-
-
 # Example string input for testing
 example_input = "John is connected to Bryant, Debra, Walter.\
 John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner.\
@@ -30,6 +28,35 @@ Freda is connected to Olive, John, Debra.\
 Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
 
 
+def extract_name(sentence):
+    """Extracts the name from a single sentence of the 'database' input_string.
+
+    The name is the first word in the string.
+
+    Args:
+        sentence (str): String in form <user> is connected to <user1>, ..., <userM> 
+                        OR <user> likes to play <game1>, ..., <gameN>.
+    """
+    pos = sentence.find(' ')
+    return sentence[:pos]
+
+
+def extract_data(sentence, start_str):
+    """Extracts the comma separated connection or film data from a sentence 
+    of the 'database' input_string. Starting from a given substring to the
+    end of the string.
+
+    To retrieve connections, start_str='to'. To retrieve games, start_str='play'
+
+    Args:
+        - sentence (str): String in form <user> is connected to <user1>, ..., <userM> 
+            OR <user> likes to play <game1>, ..., <gameN>.
+        - start_str (str): Substring to identify the beginning of the desired data.
+    """
+    pos = sentence.find(start_str)
+    return sentence[pos + (len(start_str) + 1):].split(',')
+
+
 def create_data_structure(string_input):
     """Parses a block of text and stores relevant
     information into a data structure.
@@ -40,7 +67,23 @@ def create_data_structure(string_input):
     Returns:
         The newly created network data structure
     """
+    sentences = string_input.split('.')
+    network = {}
+    if string_input != '':
+        for i in range(0, len(sentences) - 1, 2):
+            connections = extract_data(sentences[i], 'to')
+            games = extract_data(sentences[i + 1], 'play')
+            name = extract_name(sentences[i])
+
+            if not name in network:
+                network[name] = {'connections': [], 'games': []}
+            network[name]['connections'] += connections
+            network[name]['games'] += games
     return network
+
+
+# network = create_data_structure(example_input)
+# print(network['Freda'])
 
 # ----------------------------------------------------------------------------- #
 # Note that the first argument to all procedures below is 'network' This is the #

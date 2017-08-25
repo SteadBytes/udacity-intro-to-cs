@@ -29,8 +29,8 @@ connections and games liked for all users listed on the right-hand side of an
 Complete the procedures according to the specifications below
 as well as to implement a Make-Your-Own procedure (MYOP).
 
-### Procedures/Specification
- #### `create_data_structure(string_input)`: 
+## Procedures/Specification
+ ### `create_data_structure(string_input)`: 
   Parses a block of text and stores relevant 
   information into a data structure. You are free to choose and design any 
   data structure you would like to use to manage the information.
@@ -51,7 +51,44 @@ Arguments:
 Returns :
   * The newly created network data structure
 
-#### `get_connections(network, user)`: 
+  #### Data Structure
+  * Dictionary of Dictionaries (with lists)
+    * Keys = users
+    * Two dicts with lists for each user
+    * `{<user>:{'connections':[connections], 'games': [games]}}`
+    * `'John is connected to Bryant, Debra, Walter.John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner.'` gives:
+      ``` python
+      network = {'John': {'connections': ['Bryant', 'Debra', 'Walter'],
+                          'games': ['The Movie: The Game',
+                                    'The Legend of Corgi',
+                                    'Dinosaur Diner']
+                          }
+                }
+      ```
+  #### Method
+  * Split input on `'.'` to get list of sentences
+    * work on sentence pairs, i.e. `index=i, index=i+1` each iteration -> `index+=2`
+    * Get name by slicing string up to first `' '` character.
+      ```python
+      pos = sentence.find(' ')
+      name = sentence[:pos]
+      ```
+    * Get lists of connections/games by slicing from `'to'/'play'` respectively to end of each sentence, then splitting on `','`
+      ```python
+      connection_pos = sentence.find('to')
+      # Must add len('to')+1 to pos to split *after* the starting string
+      connections = sentence[pos+3:].split(',')
+      game_pos = sentence.find('play')
+      # Must add len('play')+1 to pos to split *after* the starting string
+      games = sentence[pos+5:].split(',')
+      ```
+  * Add to network
+    ```python
+    network[name]['connections'] = connections
+    network[name]['games'] = games
+    ```
+
+### `get_connections(network, user)`: 
   Returns a list of all the connections that user has
 
 Arguments: 
@@ -63,7 +100,7 @@ Returns:
   * If the user has no connections, return an empty list.
   * If the user is not in network, return None.
 
-#### `get_games_liked(network, user)`: 
+### `get_games_liked(network, user)`: 
   Returns a list of all the games a user likes
 
 Arguments: 
@@ -75,7 +112,7 @@ Returns:
   * If the user likes no games, return an empty list.
   * If the user is not in network, return None.
 
-#### `add_connection(network, user_A, user_B)`: 
+### `add_connection(network, user_A, user_B)`: 
   Adds a connection from user_A to user_B. Make sure to check that both users 
   exist in network.
 
@@ -89,7 +126,7 @@ Returns:
   * If a connection already exists from user_A to user_B, return network unchanged.
   * If user_A or user_B is not in network, return False.
 
-#### `add_new_user(network, user, games)`: 
+### `add_new_user(network, user, games)`: 
   Creates a new user profile and adds that user to the network, along with
   any game preferences specified in games. Assume that the user has no 
   connections to begin with.
@@ -106,7 +143,7 @@ Returns:
   * If the user already exists in network, return network *UNCHANGED* (do not change
     the user's game preferences)
 
-#### `get_secondary_connections(network, user)`: 
+### `get_secondary_connections(network, user)`: 
   Finds all the secondary connections (i.e. connections of connections) of a 
   given user.
 
@@ -124,7 +161,7 @@ Returns:
   himself/herself. It is also OK if the list contains a user's primary 
   connection that is a secondary connection as well.
 
-#### `count_common_connections(network, user_A, user_B)`: 
+### `count_common_connections(network, user_A, user_B)`: 
   Finds the number of people that user_A and user_B have in common.
  
 Arguments: 
@@ -136,7 +173,7 @@ Returns:
   * The number of connections in common (as an integer).
   * If user_A or user_B is not in network, return False.
 
-#### `find_path_to_friend(network, user_A, user_B)`: 
+### `find_path_to_friend(network, user_A, user_B)`: 
   Finds a connections path from user_A to user_B. It has to be an existing 
   path but it DOES NOT have to be the shortest path.
   
@@ -168,5 +205,5 @@ Hints:
 * If you are comfortable with default parameters, you might consider using one in this procedure to keep track of nodes already visited in your search. You may safely add default parameters since all calls used in the grading script 
 will only include the arguments network, `user_A`, and `user_B`.
 
-#### Make-Your-Own-Procedure (MYOP)
+### Make-Your-Own-Procedure (MYOP)
 Your MYOP should either perform some manipulation of your network data structure (like `add_new_user`) or it should perform some valuable analysis of your network (like `path_to_friend`).
