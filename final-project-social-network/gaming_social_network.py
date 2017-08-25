@@ -54,10 +54,12 @@ def extract_data(sentence, start_str):
         - start_str (str): Substring to identify the beginning of the desired data.
     """
     pos = sentence.find(start_str)
-    return sentence[pos + (len(start_str) + 1):].split(',')
+    items = sentence[pos + (len(start_str) + 1):].split(',')
+    return list(map(lambda x: x.lstrip(), items))
 
 
 def create_data_structure(string_input):
+    # TODO remove spaces from fron of some data
     """Parses a block of text and stores relevant
     information into a data structure.
 
@@ -81,6 +83,9 @@ def create_data_structure(string_input):
             network[name]['games'] += games
     return network
 
+
+network = create_data_structure(example_input)
+print(network['John'])
 # ----------------------------------------------------------------------------- #
 # Note that the first argument to all procedures below is 'network' This is the #
 # data structure that you created with your create_data_structure procedure,    #
