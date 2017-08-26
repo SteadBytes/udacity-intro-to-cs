@@ -224,7 +224,7 @@ def find_path_to_friend(network, user_A, user_B, path=None):
     path but it DOES NOT have to be the shortest path.
 
     Args:
-        network: The network you created with create_data_structure.
+        network: the gamer network data structure
         user_A:  String holding the starting username ("Abe")
         user_B:  String holding the ending username ("Zed")
     Returns:
@@ -248,24 +248,45 @@ def find_path_to_friend(network, user_A, user_B, path=None):
             next_path = find_path_to_friend(network, u, user_B, path)
             if next_path:
                 return next_path
+
+
 # Make-Your-Own-Procedure (MYOP)
 # -----------------------------------------------------------------------------
-# Your MYOP should either perform some manipulation of your network data
-# structure (like add_new_user) or it should perform some valuable analysis of
-# your network (like path_to_friend). Don't forget to comment your MYOP. You
-# may give this procedure any name you want.
+def users_by_game(network, game):
+    """ Filters users by a liked game.
 
-# Replace this with your own procedure! You can also uncomment the lines below
-# to see how your code behaves. Have fun!
+    Args:
+        network: the gamer network data structure
+        game (str): name of game to filter by
+    Returns:
+        List of users who like the game
+        - None if no users like the game
+    """
+    result = []
+    for user in network:
+        if game in get_games_liked(network, user):
+            result.append(user)
+    if result == []:
+        return None
+    return result
 
-#net = create_data_structure(example_input)
-# print net
-# print get_connections(net, "Debra")
-# print get_connections(net, "Mercedes")
-# print get_games_liked(net, "John")
-# print add_connection(net, "John", "Freda")
-# print add_new_user(net, "Debra", [])
-# print add_new_user(net, "Nick", ["Seven Schemers", "The Movie: The Game"]) # True
-# print get_secondary_connections(net, "Mercedes")
-# print count_common_connections(net, "Mercedes", "John")
-# print find_path_to_friend(net, "John", "Ollie")
+
+def delete_user(network, user):
+    """ Removes a user from the network, including within connections.
+
+    Args:
+        network: the gamer network data structure
+        user: user to remove
+    Returns:
+        The updated network with the user completely removed.
+        - If the user doesn't exist in the network the original *unchanged*
+            network is returned
+    """
+    if user in network:
+        del network[user]
+        for u in network:
+            connections = get_connections(network, u)
+            if user in connections:
+                i = connections.index(user)
+                del connections[i]
+    return network

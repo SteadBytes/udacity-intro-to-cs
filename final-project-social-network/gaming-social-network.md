@@ -219,3 +219,17 @@ will only include the arguments network, `user_A`, and `user_B`.
     * Won't return anything if target user not found
 ### Make-Your-Own-Procedure (MYOP)
 Your MYOP should either perform some manipulation of your network data structure (like `add_new_user`) or it should perform some valuable analysis of your network (like `path_to_friend`).
+
+#### `users_by_game()`
+Filter the network by users who have a specific game in common.
+* Return a list of those users.
+* Return None if no users have the game.
+
+#### `delete_user()`
+Removes a user from the network, including in other users connections.
+* Delete user from network
+* Loop through each user
+  * get connections
+  * if user in connections -> delete
+* Return mutated network
+* If user doesn't exist in network -> return *unchagned*

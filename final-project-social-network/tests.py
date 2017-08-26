@@ -234,6 +234,37 @@ Jeff likes to play ."
         self.assertEqual(gsn.find_path_to_friend(
             self.network, 'A', 'D'), expected)
 
+    def test_users_by_game(self):
+        expected = ['John', 'Jennie']
+        users = gsn.users_by_game(self.network, 'Dinosaur Diner')
+        self.assertIsInstance(users, list)
+        self.assertEqual(users, expected)
+
+    def test_users_by_game_no_game(self):
+        """ Test whether users_by_game returns None when no users like the game.
+        """
+        self.assertIsNone(gsn.users_by_game(self.network, 'COD_WAW'))
+
+    def test_delete_user(self):
+        """ Test whether user removed from network and from
+            any other user connections 
+        """
+        gsn.delete_user(self.network, 'John')
+        self.assertNotIn('John', self.network)
+        for user in self.network:
+            self.assertNotIn('John', self.network[user]['connections'],
+                             '\'John\' found in %s connections' % user)
+
+    def test_delete_user_no_user(self):
+        """Test whether delete_user returns original *unchanged* network when
+        given a user that doesn't exist.
+        """
+        # Deepcopy is O(NM) time -> better way to test?
+        current_network = deepcopy(self.network)
+        # User already present, should make no changes to network
+        network = gsn.delete_user(self.network, 'Gandalf')
+        self.assertEqual(current_network, network)
+
 
 if __name__ == '__main__':
     unittest.main()
