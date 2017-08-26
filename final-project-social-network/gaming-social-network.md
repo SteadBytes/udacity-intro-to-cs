@@ -161,6 +161,10 @@ Returns:
   himself/herself. It is also OK if the list contains a user's primary 
   connection that is a secondary connection as well.
 
+#### Method
+* Loop through connections
+  * For each connection, add their connections to result list
+
 ### `count_common_connections(network, user_A, user_B)`: 
   Finds the number of people that user_A and user_B have in common.
  
@@ -204,6 +208,14 @@ Hints:
   that case.
 * If you are comfortable with default parameters, you might consider using one in this procedure to keep track of nodes already visited in your search. You may safely add default parameters since all calls used in the grading script 
 will only include the arguments network, `user_A`, and `user_B`.
-
+#### Method
+* Base case -> target user == current user
+* Base case -> Users dont exist -> return none
+* Track searched path of users with extra param of list (default=[])
+* add current user to searched path
+* For each current users connections -> **Depth first** search
+  * If not in searched path -> get path for user
+  * If a path is returned -> return the path
+    * Won't return anything if target user not found
 ### Make-Your-Own-Procedure (MYOP)
 Your MYOP should either perform some manipulation of your network data structure (like `add_new_user`) or it should perform some valuable analysis of your network (like `path_to_friend`).

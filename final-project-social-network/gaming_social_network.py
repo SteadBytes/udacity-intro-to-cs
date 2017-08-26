@@ -56,12 +56,13 @@ def extract_data(sentence, start_str):
     pos = sentence.find(start_str)
     if pos == -1:
         return None
+    if pos + len(start_str) == len(sentence) - 1:
+        return []
     items = sentence[pos + (len(start_str) + 1):].split(',')
     return list(map(lambda x: x.lstrip(), items))
 
 
 def create_data_structure(string_input):
-    # TODO remove spaces from fron of some data
     """Parses a block of text and stores relevant
     information into a data structure.
 
@@ -86,8 +87,6 @@ def create_data_structure(string_input):
     return network
 
 
-network = create_data_structure(example_input)
-print(network['John'])
 # ----------------------------------------------------------------------------- #
 # Note that the first argument to all procedures below is 'network' This is the #
 # data structure that you created with your create_data_structure procedure,    #
@@ -145,12 +144,18 @@ def add_connection(network, user_A, user_B):
         - If a connection already exists from user_A to user_B, return network unchanged.
         - If user_A or user_B is not in network, return False.
     """
+    if user_A not in network or user_B not in network:
+        return False
+    if not user_B in network[user_A]['connections']:
+        network[user_A]['connections'].append(user_B)
     return network
 
 
 def add_new_user(network, user, games):
     """Creates a new user profile and adds that user to the network, along with
     any game preferences specified in games.
+
+    Users have no connections to begin with.
 
     Args:
         network: the gamer network data structure
@@ -163,6 +168,8 @@ def add_new_user(network, user, games):
         - If the user already exists in network, return network *UNCHANGED* (do not change
             the user's game preferences)
     """
+    if not user in network:
+        network[user] = {'connections': [], 'games': games}
     return network
 
 
@@ -181,6 +188,13 @@ def get_secondary_connections(network, user):
         - If the user is not in the network, return None.
         - If a user has no primary connections to begin with, return an empty list.
     """
+    if user not in network:
+        return None
+    if network[user]['connections'] != []:
+        result = []
+        for conn in network[user]['connections']:
+            result += network[conn]['connections']
+        return result
     return []
 
 
@@ -196,10 +210,16 @@ def count_common_connections(network, user_A, user_B):
         The number of connections in common (as an integer).
         - If user_A or user_B is not in network, return False.
     """
-    return 0
+    if user_A not in network or user_B not in network:
+        return False
+    common_connections = 0
+    for conn in network[user_A]['connections']:
+        if conn in network[user_B]['connections']:
+            common_connections += 1
+    return common_connections
 
 
-def find_path_to_friend(network, user_A, user_B):
+def find_path_to_friend(network, user_A, user_B, path=None):
     """Finds a connections path from user_A to user_B. It has to be an existing
     path but it DOES NOT have to be the shortest path.
 
@@ -212,9 +232,22 @@ def find_path_to_friend(network, user_A, user_B):
         - If such a path does not exist, return None.
         - If user_A or user_B is not in network, return None.
     """
-    # your RECURSIVE solution here!
-    return None
+    if path is None:
+        # Only need to check user existence on first call ->default=None
+        if user_A not in network or user_B not in network:
+            return None
 
+        path = []
+
+    current_connections = get_connections(network, user_A)
+    path.append(user_A)
+    if user_A == user_B:
+        return path
+    for u in current_connections:
+        if u not in path:
+            next_path = find_path_to_friend(network, u, user_B, path)
+            if next_path:
+                return next_path
 # Make-Your-Own-Procedure (MYOP)
 # -----------------------------------------------------------------------------
 # Your MYOP should either perform some manipulation of your network data

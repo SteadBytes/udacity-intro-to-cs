@@ -1,8 +1,9 @@
 import unittest
 import gaming_social_network as gsn
+from copy import deepcopy
 
 
-class TestCreateDataStructure(unittest.TestCase):
+class TestNetwork(unittest.TestCase):
 
     def setUp(self):
         self.example_input = "John is connected to Bryant, Debra, Walter.\
@@ -26,7 +27,9 @@ Jennie likes to play Super Mushroom Man, Dinosaur Diner, Call of Arms.\
 Robin is connected to Ollie.\
 Robin likes to play Call of Arms, Dwarves and Swords.\
 Freda is connected to Olive, John, Debra.\
-Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
+Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures.\
+Jeff is connected to .\
+Jeff likes to play ."
         self.network = gsn.create_data_structure(self.example_input)
 
     def test_empty_string(self):
@@ -65,6 +68,171 @@ Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
         sentence = ('John likes to The Movie: The Game,'
                     'The Legend of Corgi, Dinosaur Diner')
         self.assertIsNone(gsn.extract_data(sentence, 'play'))
+
+    def test_get_connections(self):
+        ollie_expected = ['Mercedes', 'Freda', 'Bryant']
+        connections = gsn.get_connections(self.network, 'Ollie')
+        self.assertIsInstance(connections, list)
+        self.assertEqual(connections, ollie_expected)
+
+    def test_get_connections_no_user(self):
+        """ Test whether get_connections returns None for a user
+        **not** present in the network
+        """
+        self.assertIsNone(gsn.get_connections(self.network, 'Bilbo_Baggins'))
+
+    def test_get_connections_no_connections(self):
+        self.network['Test_User'] = {}
+        self.assertEqual(gsn.get_connections(self.network, 'Test_User'), [])
+        self.network.pop('Test_user', None)
+
+    def test_get_connections_empty_connections(self):
+        self.assertEqual(gsn.get_connections(self.network, 'Jeff'), [])
+
+    def test_get_games_liked(self):
+        ollie_expected = ['Call of Arms',
+                          'Dwarves and Swords', 'The Movie: The Game']
+        games = gsn.get_games_liked(self.network, 'Ollie')
+        self.assertIsInstance(games, list)
+        self.assertEqual(games, ollie_expected)
+
+    def test_get_games_liked_no_user(self):
+        self.assertIsNone(gsn.get_games_liked(self.network, 'Bilbo_Baggins'))
+
+    def test_get_get_games_liked_no_games(self):
+        self.network['Test_User'] = {}
+        self.assertEqual(gsn.get_games_liked(self.network, 'Test_User'), [])
+
+    def test_get_get_games_liked_empty_connections(self):
+        self.assertEqual(gsn.get_games_liked(self.network, 'Jeff'), [])
+
+    def test_add_connection(self):
+        updated_network = gsn.add_connection(self.network, 'John', 'Mercedes')
+        self.assertIsInstance(updated_network, dict)
+        self.assertIn('Mercedes', self.network['John']['connections'])
+        self.assertNotIn('John', self.network['Mercedes']['connections'])
+
+    def test_add_connection_no_user(self):
+        """ Test whether add_connection returns False if either user_A or user_B
+        not present in the network
+        """
+        unknown_user = 'unkown_user'
+        known_user = 'John'
+        # Should return False if *either* user_A or user_B not in network
+        # -> try both ways round
+        self.assertFalse(gsn.add_connection(
+            self.network, unknown_user, known_user))
+        self.assertFalse(gsn.add_connection(
+            self.network, known_user, unknown_user))
+
+    def test_add_connection_existing_connection(self):
+        # Deepcopy is O(NM) time -> better way to test?
+        current_network = deepcopy(self.network)
+        # Connection already present, should make no changes to network
+        network = gsn.add_connection(self.network, 'John', 'Bryant')
+        self.assertEqual(current_network, network)
+
+    def test_add_new_user(self):
+        user = 'Gandalf'
+        games = ['Lord of the Rings: War in the North',
+                 'Minecraft', 'Dwarf Fortress']
+        self.assertIsInstance(gsn.add_new_user(
+            self.network, user, games), dict)
+        self.assertIn(user, self.network,
+                      'User %s not added to network successfully' % user)
+        self.assertEqual(self.network[user]['games'], games,
+                         'User %s games not added to network succesfully' % user)
+
+        self.assertEqual(self.network[user]['connections'], [])
+
+    def test_add_new_user_existing_user(self):
+        games = ['Lord of the Rings: War in the North',
+                 'Minecraft', 'Dwarf Fortress']
+        # Deepcopy is O(NM) time -> better way to test?
+        current_network = deepcopy(self.network)
+        # User already present, should make no changes to network
+        network = gsn.add_new_user(self.network, 'John', games)
+        self.assertEqual(current_network, network)
+
+    def test_get_secondary_connections(self):
+        expected = ['Olive', 'Ollie', 'Freda', 'Mercedes', 'Walter',
+                    'Levi', 'Jennie', 'Robin', 'John', 'Levi', 'Bryant']
+        conns = gsn.get_secondary_connections(self.network, 'John')
+        self.assertIsInstance(conns, list)
+        self.assertEqual(conns, expected)
+
+    def test_get_secondary_connections_no_user(self):
+        """ Test whether get_secondary_connections returns None for a user
+        **not** present in the network
+        """
+        self.assertIsNone(gsn.get_secondary_connections(
+            self.network, 'Unkown_User'))
+
+    def test_get_secondary_connections_no_primary(self):
+        """Test whether get_secondary_connections return empty list for
+        a user with no primary connections
+        """
+        self.network['Test_User'] = {'connections': []}
+        self.assertEqual(gsn.get_secondary_connections(
+            self.network, 'Test_User'), [])
+
+    def test_count_common_connections(self):
+        expected = 2
+        common_connections = gsn.count_common_connections(
+            self.network, 'Levi', 'Olive')
+        self.assertEqual(common_connections, expected)
+
+    def test_count_common_connections_no_connections(self):
+        common_connections = gsn.count_common_connections(
+            self.network, 'John', 'Jennie')
+        self.assertEqual(common_connections, 0)
+
+    def test_count_common_connections_no_user(self):
+        unknown_user = 'unkown_user'
+        known_user = 'John'
+        # Should return False if *either* user_A or user_B not in network
+        # -> try both ways round
+        self.assertFalse(gsn.count_common_connections(
+            self.network, unknown_user, known_user))
+        self.assertFalse(gsn.count_common_connections(
+            self.network, known_user, unknown_user))
+
+    def test_find_path_to_friend_short(self):
+        short_expected_path = ['John', 'Bryant', 'Olive']
+        self.assertEqual(gsn.find_path_to_friend(
+            self.network, 'John', 'Olive'), short_expected_path)
+
+    def test_find_path_to_friend_long(self):
+        long_expected_path = ['John', 'Bryant', 'Olive', 'Ollie',
+                              'Mercedes', 'Walter', 'Levi', 'Robin', 'Freda']
+        self.assertEqual(gsn.find_path_to_friend(
+            self.network, 'John', 'Freda'), long_expected_path)
+
+    def test_find_path_to_friend_no_path(self):
+        self.assertIsNone(gsn.find_path_to_friend(
+            self.network, 'John', 'Jeff'))
+
+    def test_find_path_to_friend_no_user(self):
+        unknown_user = 'unkown_user'
+        known_user = 'John'
+        # Should return None if *either* user_A or user_B not in network
+        # -> try both ways round
+        self.assertIsNone(gsn.find_path_to_friend(
+            self.network, unknown_user, known_user))
+        self.assertIsNone(gsn.find_path_to_friend(
+            self.network, known_user, unknown_user))
+
+    def test_find_path_to_friend_circular(self):
+        """ Test find_path_to_friend recursion terminates with connection loops.
+        i.e. A is connected to B. B is connected to C. C is connected to B
+        """
+        self.network['A'] = {'connections': ['B']}
+        self.network['B'] = {'connections': ['C']}
+        self.network['C'] = {'connections': ['B', 'D']}
+        self.network['D'] = {}
+        expected = ['A', 'B', 'C', 'D']
+        self.assertEqual(gsn.find_path_to_friend(
+            self.network, 'A', 'D'), expected)
 
 
 if __name__ == '__main__':
