@@ -233,3 +233,7 @@ Removes a user from the network, including in other users connections.
   * if user in connections -> delete
 * Return mutated network
 * If user doesn't exist in network -> return *unchagned*
+
+### Other method ideas
+* longest path between connections
+* shortest path through all connections

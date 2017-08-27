@@ -34,7 +34,7 @@ def extract_name(sentence):
     The name is the first word in the string.
 
     Args:
-        sentence (str): String in form <user> is connected to <user1>, ..., <userM> 
+        sentence (str): String in form <user> is connected to <user1>, ..., <userM>
                         OR <user> likes to play <game1>, ..., <gameN>.
     """
     pos = sentence.find(' ')
@@ -42,14 +42,14 @@ def extract_name(sentence):
 
 
 def extract_data(sentence, start_str):
-    """Extracts the comma separated connection or film data from a sentence 
+    """Extracts the comma separated connection or film data from a sentence
     of the 'database' input_string. Starting from a given substring to the
     end of the string.
 
     To retrieve connections, start_str='to'. To retrieve games, start_str='play'
 
     Args:
-        - sentence (str): String in form <user> is connected to <user1>, ..., <userM> 
+        - sentence (str): String in form <user> is connected to <user1>, ..., <userM>
             OR <user> likes to play <game1>, ..., <gameN>.
         - start_str (str): Substring to identify the beginning of the desired data.
     """
@@ -235,25 +235,23 @@ def find_path_to_friend(network, user_A, user_B, path=None):
         - If user_A or user_B is not in network, return None.
     """
     if path is None:
-        # Only need to check user existence on first call ->default=None
-        if user_A not in network or user_B not in network:
-            return None
-
         path = []
 
-    current_connections = get_connections(network, user_A)
-    path.append(user_A)
-    if user_A == user_B:
-        return path
-    for u in current_connections:
-        if u not in path:
-            next_path = find_path_to_friend(network, u, user_B, path)
-            if next_path:
-                return next_path
-
+    if user_A in network and user_B in network:
+        path.append(user_A)
+        current_connections = get_connections(network, user_A)
+        if user_B in current_connections:
+            return [user_A, user_B]
+        for u in current_connections:
+            if u not in path:
+                next_path = find_path_to_friend(network, u, user_B, path)
+                if next_path:
+                    return [user_A] + next_path
 
 # Make-Your-Own-Procedure (MYOP)
 # -----------------------------------------------------------------------------
+
+
 def users_by_game(network, game):
     """ Filters users by a liked game.
 
