@@ -192,8 +192,10 @@ def get_secondary_connections(network, user):
         return None
     if network[user]['connections'] != []:
         result = []
-        for conn in network[user]['connections']:
-            result += network[conn]['connections']
+        for conn in get_connections(network, user):
+            for conn_2 in get_connections(network, conn):
+                if conn_2 not in result:
+                    result.append(conn_2)
         return result
     return []
 

@@ -64,7 +64,7 @@ Returns :
                                     'Dinosaur Diner']
                           }
                 }
-      ```
+      ```c
   #### Method
   * Split input on `'.'` to get list of sentences
     * work on sentence pairs, i.e. `index=i, index=i+1` each iteration -> `index+=2`

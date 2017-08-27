@@ -156,7 +156,7 @@ Jeff likes to play ."
 
     def test_get_secondary_connections(self):
         expected = ['Olive', 'Ollie', 'Freda', 'Mercedes', 'Walter',
-                    'Levi', 'Jennie', 'Robin', 'John', 'Levi', 'Bryant']
+                    'Levi', 'Jennie', 'Robin', 'John', 'Bryant']
         conns = gsn.get_secondary_connections(self.network, 'John')
         self.assertIsInstance(conns, list)
         self.assertEqual(conns, expected)
